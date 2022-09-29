@@ -10,18 +10,22 @@ jobs:
         github.event.issue.pull_request.merged_at &&
         contains(github.event.comment.body, '@astjbot backport')
     runs-on: ubuntu-latest
+    outputs:
+      pr_json: ${{steps.export.outputs.pr_json}}
     steps:
       - name: Get pull request details via JSON
         run: |
-          echo 'pr_json<<EOF' >> $GITHUB_ENV
+          echo 'PR_JSON<<EOF' >> $GITHUB_ENV
           gh api $PR_URL >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_URL: ${{ github.event.issue.pull_request.url }}
+      - id: export
+        run: echo "::set-output name=pr_json::$PR_JSON"
   cherry-pick:
     needs: [get-pull-request]
     uses: ./.github/workflows/cherry-pick-workflow.yml
     with:
       base: prev
-      pull_request_json: ${{ env.pr_json }}
+      pull_request_json: ${{ needs.get-pull-request.outputs.pr_json }}
