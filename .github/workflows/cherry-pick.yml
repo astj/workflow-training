@@ -24,7 +24,22 @@ jobs:
       env:
         MERGE_COMMIT: ${{github.event.pull_request.merge_commit_sha}}
     - uses: peter-evans/create-pull-request@v4
+      id: create-pull-request
       with:
         title: "backport: ${{github.event.pull_request.title}}"
         body: "Original: ${{github.event.pull_request.html_url}}"
         reviewers: ${{github.event.pull_request.merged_by.login}}
+    # https://qiita.com/osakiy/items/df80db383ce33b82c797
+    - name: Create comments
+      run: |
+        cat << EOF > comments
+        Backported to prev as ${PULL_REQUEST_NUMBER}
+        EOF
+      env:
+        PULL_REQUEST_NUMBER: ${{ steps.create-pull-request.outputs.pull-request-number }}
+    - name: Post comments
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        URL: ${{ github.event.pull_request.html_url }}
+      run:
+        gh pr comment -F ./comments "${URL}"
