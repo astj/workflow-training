@@ -5,7 +5,9 @@ on:
 
 jobs:
   cherry-pick:
-    if: github.event.pull_request.merged && contains(github.event.pull_request.labels.*.name, 'backport')
+    if: github.event.pull_request.merged &&
+        contains(github.event.pull_request.labels.*.name, 'backport') &&
+        github.event.pull_request.base.ref == 'main'
     runs-on: ubuntu-latest
     steps:
     - uses: hmarr/debug-action@v2
