@@ -27,4 +27,4 @@ jobs:
       with:
         title: "backport: ${{github.event.pull_request.title}}"
         body: "Original: ${{github.event.pull_request.html_url}}"
-        reviewers: ${{github.event.pull_reqest.merged_by.login}}
+        reviewers: ${{github.event.pull_request.merged_by.login}}
