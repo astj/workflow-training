@@ -34,6 +34,8 @@ jobs:
         title: "backport: ${{ fromJSON(inputs.pull_request_json).title }}"
         body: "Original: ${{ fromJSON(inputs.pull_request_json).html_url }}"
         reviewers: ${{ fromJSON(inputs.pull_request_json).merged_by.login }}
+        branch: "backport/${{ fromJSON(inputs.pull_request_json).head.ref }}"
+        branch-suffix: short-commit-hash
     # https://qiita.com/osakiy/items/df80db383ce33b82c797
     - name: Create comments
       run: |
