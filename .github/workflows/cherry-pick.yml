@@ -16,7 +16,7 @@ jobs:
         git fetch ${MERGE_COMMIT}
         git cherry-pick -m 1 ${MERGE_COMMIT}
       env:
-        MERGE_COMMIT: ${{github.event.pull_request.merge_commit_sha1}}
+        MERGE_COMMIT: ${{github.event.pull_request.merge_commit_sha}}
     - uses: peter-evans/create-pull-request@v4
       with:
         title: "backport: ${{github.event.pull_request.title}}"
