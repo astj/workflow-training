@@ -6,6 +6,11 @@ on:
         description: base branch to cherry-pick to
         type: string
         required: true
+      pull_request_json:
+        description: json representation of event.pul_request
+        type: string
+        required: false
+        default: ${{ toJSON(github.event.pull_request) }}
     secrets: inherit
 
 jobs:
@@ -23,13 +28,13 @@ jobs:
         git fetch origin ${MERGE_COMMIT}
         git cherry-pick -m 1 ${MERGE_COMMIT}
       env:
-        MERGE_COMMIT: ${{github.event.pull_request.merge_commit_sha}}
+        MERGE_COMMIT: ${{ fromJSON(inputs.pull_request_json).merge_commit_sha }}
     - uses: peter-evans/create-pull-request@v4
       id: create-pull-request
       with:
-        title: "backport: ${{github.event.pull_request.title}}"
-        body: "Original: ${{github.event.pull_request.html_url}}"
-        reviewers: ${{github.event.pull_request.merged_by.login}}
+        title: "backport: ${{ fromJSON(inputs.pull_request_json).title }}"
+        body: "Original: ${{ fromJSON(inputs.pull_request_json).html_url }}"
+        reviewers: ${{ fromJSON(inputs.pull_request_json).merged_by.login }}
     # https://qiita.com/osakiy/items/df80db383ce33b82c797
     - name: Create comments
       run: |
@@ -41,6 +46,6 @@ jobs:
     - name: Post comments
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        URL: ${{ github.event.pull_request.html_url }}
+        URL: ${{ fromJSON(inputs.pull_request_json).html_url }}
       run:
         gh pr comment -F ./comments "${URL}"
