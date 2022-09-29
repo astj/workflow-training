@@ -15,7 +15,7 @@ jobs:
       with:
         ref: prev # backport 先のブランチ
     - run: |
-        git fetch ${MERGE_COMMIT}
+        git fetch origin ${MERGE_COMMIT}
         git cherry-pick -m 1 ${MERGE_COMMIT}
       env:
         MERGE_COMMIT: ${{github.event.pull_request.merge_commit_sha}}
