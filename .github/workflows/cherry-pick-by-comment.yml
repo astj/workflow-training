@@ -15,9 +15,8 @@ jobs:
     steps:
       - name: Get pull request details via JSON
         run: |
-          gh api $PR_URL
           echo 'PR_JSON<<EOF' >> $GITHUB_ENV
-          gh api $PR_URL >> $GITHUB_ENV
+          gh api $PR_URL | jq -c . >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
