@@ -33,7 +33,7 @@ jobs:
     - name: Create comments
       run: |
         cat << EOF > comments
-        Backported to prev as ${PULL_REQUEST_NUMBER}
+        Backported to prev as #${PULL_REQUEST_NUMBER}
         EOF
       env:
         PULL_REQUEST_NUMBER: ${{ steps.create-pull-request.outputs.pull-request-number }}
