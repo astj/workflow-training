@@ -28,7 +28,7 @@ jobs:
           gh api \
           --method POST \
           -H "Accept: application/vnd.github+json" \
-          ${COMMENT} \
+          ${COMMENT_URL} \
           -f content='+1'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
