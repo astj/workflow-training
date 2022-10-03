@@ -51,11 +51,10 @@ jobs:
     - name: Post comments (failure)
       if: failure()
       env:
-        PULL_REQUEST_NUMBER: ${{ steps.create-pull-request.outputs.pull-request-number }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         URL: ${{ fromJSON(inputs.pull_request_json).html_url }}
       run: |
         cat << EOF > comments
-        Failed to create backport for #${PULL_REQUEST_NUMBER}
+        Failed to create backport!
         EOF
         gh pr comment -F ./comments "${URL}"
