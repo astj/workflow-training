@@ -23,6 +23,16 @@ jobs:
           PR_URL: ${{ github.event.issue.pull_request.url }}
       - id: export
         run: echo "::set-output name=pr_json::$PR_JSON"
+      - name: Set reaction
+        run: |
+          gh api \
+          --method POST \
+          -H "Accept: application/vnd.github+json" \
+          ${COMMENT} \
+          -f content='+1'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COMMENT_URL: ${{ github.event.comment.reactions.url }}
   cherry-pick:
     needs: [get-pull-request]
     uses: ./.github/workflows/cherry-pick-workflow.yml
